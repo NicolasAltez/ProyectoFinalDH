@@ -6,5 +6,4 @@
  \___/_| |_|\__\___|\__, |_|  \__,_|\__,_|\___/|_|
                      __/ |
                     |___/
-${application.title} ${application.version}
-Powered by Spring Boot ${spring-boot.version}
+Powered by Spring Boot ${spring-boot.version} And Java ${java.version}
