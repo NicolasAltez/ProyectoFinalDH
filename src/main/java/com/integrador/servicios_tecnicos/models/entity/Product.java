@@ -18,10 +18,10 @@ public class Product {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 30)
+    @Column
     private ProductType tipo;
 
-    @Column(length = 30)
+    @Column
     private String nombre;
 
     @Column(columnDefinition = "TEXT")
