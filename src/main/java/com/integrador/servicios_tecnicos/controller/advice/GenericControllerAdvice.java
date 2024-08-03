@@ -36,5 +36,4 @@ public class GenericControllerAdvice extends ResponseEntityExceptionHandler {
         LOGGER.error("error trying validate request body: ", ex);
         return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
     }
-    }
 }
