@@ -1,6 +1,4 @@
-package main.java.com.integrador.servicios_tecnicos.service;
-
-import java.util.List;
+package com.integrador.servicios_tecnicos.service;
 
 public interface IProductService {
 
