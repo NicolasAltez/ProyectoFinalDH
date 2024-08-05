@@ -1,14 +1,8 @@
+package com.integrador.servicios_tecnicos.service.impl;
 
-
-import javax.transaction.Transactional;
-
-import main.java.com.integrador.servicios_tecnicos.service.IProductService;
-
-import java.util.List;
-import java.util.Optional;
+import com.integrador.servicios_tecnicos.service.IProductService;
+import org.springframework.stereotype.Service;
 
 @Service
- 
 public class ProductService implements IProductService {
-    
 }
