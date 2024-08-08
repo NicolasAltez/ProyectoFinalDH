@@ -1,5 +1,7 @@
 package com.integrador.servicios_tecnicos.controller;
 
+import com.integrador.servicios_tecnicos.exceptions.AccountNotVerifiedException;
+import com.integrador.servicios_tecnicos.exceptions.UserNotFoundException;
 import com.integrador.servicios_tecnicos.models.dtos.user.LoginResponseDTO;
 import com.integrador.servicios_tecnicos.models.dtos.user.LoginUserDTO;
 import com.integrador.servicios_tecnicos.models.dtos.user.RegisterUserDTO;
@@ -28,7 +30,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> authenticate(@RequestBody LoginUserDTO loginUserDTO){
+    public ResponseEntity<LoginResponseDTO> authenticate(@RequestBody LoginUserDTO loginUserDTO) throws UserNotFoundException, AccountNotVerifiedException {
         User authenticatedUser = authenticationService.authenticate(loginUserDTO);
         String jwtToken = jwtService.generateToken(authenticatedUser);
         LoginResponseDTO loginResponseDTO = new LoginResponseDTO(jwtToken, jwtService.getExpirationTime());
