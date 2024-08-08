@@ -12,7 +12,7 @@ public class ServiciosTecnicosApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ServiciosTecnicosApplication.class, args);
-		LOGGER.info("Application running, ejemplo de pr");
+		LOGGER.info("Application running");
 	}
 
 }
