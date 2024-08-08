@@ -19,7 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Service
 public class JwtService {
 
-    @Value(("${jwt.security.jwt.secret-key}"))
+    @Value(("${security.jwt.secret-key}"))
     private String secretKey;
 
     @Value(("${security.jwt.expiration-time}"))
