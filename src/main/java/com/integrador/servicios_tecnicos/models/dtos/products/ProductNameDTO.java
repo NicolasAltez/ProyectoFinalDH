@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class ProductNameDTO {
     private Long id;
     private String name;
+    private String urlImage;
 }
