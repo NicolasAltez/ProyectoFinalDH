@@ -101,21 +101,6 @@ public class GenericControllerAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Object> userNotFoundException(UserNotFoundException userNotFoundException){
-        String messageException = userNotFoundException.getMessage();
-
-        ErrorMessageDTO errorMessage = ErrorMessageDTO.builder()
-                .message(messageException)
-                .timestamp(LocalDateTime.now())
-                .statusCode(HttpStatus.NOT_FOUND.value())
-                .description(HttpStatus.NOT_FOUND.getReasonPhrase())
-                .build();
-
-        LOGGER.error("userNotFoundException: {}", messageException);
-        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
-    }
-
     @ExceptionHandler(VerificationCodeExpiredException.class)
     public ResponseEntity<Object> verificationCodeExpiredException(VerificationCodeExpiredException verificationCodeExpiredException){
         String messageException = verificationCodeExpiredException.getMessage();

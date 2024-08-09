@@ -43,9 +43,9 @@ public class AuthenticationService {
         return userRepository.save(user);
     }
 
-    public User authenticate(LoginUserDTO login) throws UserNotFoundException, AccountNotVerifiedException {
+    public User authenticate(LoginUserDTO login) throws AccountNotVerifiedException, ResourceNotFoundException {
         User user = userRepository.findByEmail(login.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found "));
 
         if (!user.isEnabled()) {
             throw new AccountNotVerifiedException("Account not verified. Please verify your account");
@@ -59,9 +59,9 @@ public class AuthenticationService {
         return user;
     }
 
-    public void verifyUser(VerifyUserDTO verify) throws UserNotFoundException, InvalidVerificationCodeException, VerificationCodeExpiredException {
+    public void verifyUser(VerifyUserDTO verify) throws InvalidVerificationCodeException, VerificationCodeExpiredException, ResourceNotFoundException {
         User user = userRepository.findByEmail(verify.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (user.getVerificationCodeExpiresAt().isBefore(LocalDateTime.now())) {
             throw new VerificationCodeExpiredException("Verification code expired. Please sign up again");
@@ -70,9 +70,9 @@ public class AuthenticationService {
         userRepository.save(user);
     }
 
-    public void resendVerificationCode(String email) throws UserNotFoundException, AccountAlreadyVerifiedException {
+    public void resendVerificationCode(String email) throws ResourceNotFoundException, AccountAlreadyVerifiedException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (user.isEnabled()) {
             throw new AccountAlreadyVerifiedException("Account already verified");
