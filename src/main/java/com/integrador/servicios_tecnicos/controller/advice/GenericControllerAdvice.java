@@ -1,5 +1,5 @@
 package com.integrador.servicios_tecnicos.controller.advice;
-import com.integrador.servicios_tecnicos.exceptions.ResourceNotFoundException;
+import com.integrador.servicios_tecnicos.exceptions.*;
 import com.integrador.servicios_tecnicos.models.dtos.error.ErrorMessageDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +22,7 @@ import org.springframework.validation.FieldError;
 @RestControllerAdvice
 public class GenericControllerAdvice extends ResponseEntityExceptionHandler {
     private final Logger LOGGER = LoggerFactory.getLogger(GenericControllerAdvice.class);
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         List<String> errors = ex.getBindingResult().getFieldErrors()
@@ -53,5 +54,80 @@ public class GenericControllerAdvice extends ResponseEntityExceptionHandler {
 
         LOGGER.error("resourceNotFoundException: {}", messageException);
         return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AccountAlreadyVerifiedException.class)
+    public ResponseEntity<Object> accountAlreadyVerifiedException(AccountAlreadyVerifiedException accountAlreadyVerifiedException){
+        String messageException = accountAlreadyVerifiedException.getMessage();
+
+        ErrorMessageDTO errorMessage = ErrorMessageDTO.builder()
+                .message(messageException)
+                .timestamp(LocalDateTime.now())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .description(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .build();
+
+        LOGGER.error("accountAlreadyVerifiedException: {}", messageException);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AccountNotVerifiedException.class)
+    public ResponseEntity<Object> accountNotVerifiedException(AccountNotVerifiedException accountNotVerifiedException){
+        String messageException = accountNotVerifiedException.getMessage();
+
+        ErrorMessageDTO errorMessage = ErrorMessageDTO.builder()
+                .message(messageException)
+                .timestamp(LocalDateTime.now())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .description(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .build();
+
+        LOGGER.error("accountNotVerifiedException: {}", messageException);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidVerificationCodeException.class)
+    public ResponseEntity<Object> invalidVerificationCodeException(InvalidVerificationCodeException invalidVerificationCodeException){
+        String messageException = invalidVerificationCodeException.getMessage();
+
+        ErrorMessageDTO errorMessage = ErrorMessageDTO.builder()
+                .message(messageException)
+                .timestamp(LocalDateTime.now())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .description(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .build();
+
+        LOGGER.error("invalidVerificationCodeException: {}", messageException);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> userNotFoundException(UserNotFoundException userNotFoundException){
+        String messageException = userNotFoundException.getMessage();
+
+        ErrorMessageDTO errorMessage = ErrorMessageDTO.builder()
+                .message(messageException)
+                .timestamp(LocalDateTime.now())
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .description(HttpStatus.NOT_FOUND.getReasonPhrase())
+                .build();
+
+        LOGGER.error("userNotFoundException: {}", messageException);
+        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(VerificationCodeExpiredException.class)
+    public ResponseEntity<Object> verificationCodeExpiredException(VerificationCodeExpiredException verificationCodeExpiredException){
+        String messageException = verificationCodeExpiredException.getMessage();
+
+        ErrorMessageDTO errorMessage = ErrorMessageDTO.builder()
+                .message(messageException)
+                .timestamp(LocalDateTime.now())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .description(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .build();
+
+        LOGGER.error("verificationCodeExpiredException: {}", messageException);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 }
