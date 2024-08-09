@@ -78,12 +78,12 @@ public class GenericControllerAdvice extends ResponseEntityExceptionHandler {
         ErrorMessageDTO errorMessage = ErrorMessageDTO.builder()
                 .message(messageException)
                 .timestamp(LocalDateTime.now())
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .description(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .description(HttpStatus.FORBIDDEN.getReasonPhrase())
                 .build();
 
         LOGGER.error("accountNotVerifiedException: {}", messageException);
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorMessage, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(InvalidVerificationCodeException.class)
@@ -123,11 +123,11 @@ public class GenericControllerAdvice extends ResponseEntityExceptionHandler {
         ErrorMessageDTO errorMessage = ErrorMessageDTO.builder()
                 .message(messageException)
                 .timestamp(LocalDateTime.now())
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .description(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .statusCode(HttpStatus.GONE.value())
+                .description(HttpStatus.GONE.getReasonPhrase())
                 .build();
 
         LOGGER.error("verificationCodeExpiredException: {}", messageException);
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorMessage, HttpStatus.GONE);
     }
 }
