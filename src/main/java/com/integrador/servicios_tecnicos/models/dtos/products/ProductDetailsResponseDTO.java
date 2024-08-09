@@ -13,10 +13,10 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class ProductDetailsResponseDTO {
-
     private Long id;
     private String categoryName;
     private String name;
     private String description;
     private BigDecimal price;
+    private String urlImage;
 }
