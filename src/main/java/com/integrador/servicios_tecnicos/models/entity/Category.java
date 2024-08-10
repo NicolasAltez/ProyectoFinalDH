@@ -35,4 +35,7 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Product> productList;
+
+    @Column(name = "url_image")
+    private String urlImage;
 }
