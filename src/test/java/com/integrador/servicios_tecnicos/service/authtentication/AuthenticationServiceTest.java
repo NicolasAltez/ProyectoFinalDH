@@ -92,7 +92,7 @@ class AuthenticationServiceTest {
     @Nested
     class authenticate {
         @Test
-        void testAuthenticateSuccess() throws UserNotFoundException, AccountNotVerifiedException {
+        void testAuthenticateSuccess() throws ResourceNotFoundException, AccountNotVerifiedException {
 
             User user = User.builder()
                     .email(loginUserDTO.getEmail())
@@ -119,7 +119,7 @@ class AuthenticationServiceTest {
             when(userRepository.findByEmail(loginUserDTO.getEmail())).thenReturn(Optional.empty());
 
 
-            UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
                 authenticationService.authenticate(loginUserDTO);
             });
 
@@ -171,7 +171,7 @@ class AuthenticationServiceTest {
     @Nested
     class verifyUser {
         @Test
-        void testVerifyUserSuccess() throws UserNotFoundException, InvalidVerificationCodeException, VerificationCodeExpiredException {
+        void testVerifyUserSuccess() throws ResourceNotFoundException, InvalidVerificationCodeException, VerificationCodeExpiredException {
 
             VerifyUserDTO verifyUserDTO = new VerifyUserDTO();
             verifyUserDTO.setEmail("email_test@gmail.com");
@@ -206,7 +206,7 @@ class AuthenticationServiceTest {
 
             when(userRepository.findByEmail(verifyUserDTO.getEmail())).thenReturn(Optional.empty());
 
-            UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
                 authenticationService.verifyUser(verifyUserDTO);
             });
 
@@ -269,7 +269,7 @@ class AuthenticationServiceTest {
 
 
         @Test
-        void testResendVerificationCodeSuccess() throws MessagingException, UserNotFoundException, AccountAlreadyVerifiedException {
+        void testResendVerificationCodeSuccess() throws MessagingException, ResourceNotFoundException, AccountAlreadyVerifiedException {
             User user = User.builder()
                     .email("email@gmail.com")
                     .verificationCode("123456")
@@ -303,7 +303,7 @@ class AuthenticationServiceTest {
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
 
-            UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
                 authenticationService.resendVerificationCode(user.getEmail());
             });
 

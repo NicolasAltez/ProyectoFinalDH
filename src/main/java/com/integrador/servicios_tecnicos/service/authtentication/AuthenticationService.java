@@ -1,5 +1,6 @@
 package com.integrador.servicios_tecnicos.service.authtentication;
 
+import com.integrador.servicios_tecnicos.controller.advice.GenericControllerAdvice;
 import com.integrador.servicios_tecnicos.exceptions.*;
 import com.integrador.servicios_tecnicos.models.dtos.user.LoginUserDTO;
 import com.integrador.servicios_tecnicos.models.dtos.user.RegisterUserDTO;
@@ -8,6 +9,8 @@ import com.integrador.servicios_tecnicos.models.entity.User;
 import com.integrador.servicios_tecnicos.repository.UserRepository;
 import com.integrador.servicios_tecnicos.service.email.EmailService;
 import jakarta.mail.MessagingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +25,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+    private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
 
     public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService) {
         this.userRepository = userRepository;
@@ -68,6 +72,7 @@ public class AuthenticationService {
         }
         verifyVerificationCode(user, verify.getVerificationCode());
         userRepository.save(user);
+        sendRegistrationSuccessEmail(user);
     }
 
     public void resendVerificationCode(String email) throws ResourceNotFoundException, AccountAlreadyVerifiedException {
@@ -102,7 +107,30 @@ public class AuthenticationService {
         try {
             emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            LOGGER.error("Error sending verification email: {}", e.getMessage());
+        }
+    }
+
+    private void sendRegistrationSuccessEmail(User user) {
+        String subject = "Registration Successful";
+        String htmlMessage = "<html>"
+                + "<body style=\"font-family: Arial, sans-serif;\">"
+                + "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
+                + "<h2 style=\"color: #333;\">Welcome to our app!</h2>"
+                + "<p style=\"font-size: 16px;\">We are excited to inform you that your registration was successful!</p>"
+                + "<p style=\"font-size: 16px;\">You can now log in and start using our services.</p>"
+                + "<div style=\"background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);\">"
+                + "<h3 style=\"color: #333;\">Your registered email:</h3>"
+                + "<p style=\"font-size: 18px; font-weight: bold; color: #007bff;\">" + user.getEmail() + "</p>"
+                + "</div>"
+                + "<p style=\"font-size: 16px;\">Thank you for joining us, and we look forward to serving you!</p>"
+                + "</div>"
+                + "</body>"
+                + "</html>";
+        try {
+            emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
+        } catch (MessagingException e) {
+            LOGGER.error("Error sending registration success email: {}", e.getMessage());
         }
     }
 
