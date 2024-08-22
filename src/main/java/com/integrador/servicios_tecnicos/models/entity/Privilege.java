@@ -1,5 +1,6 @@
 package com.integrador.servicios_tecnicos.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +23,6 @@ public class Privilege {
     private String name;
 
     @ManyToMany(mappedBy = "privileges")
+    @JsonIgnore
     private Collection<Role> roles;
 }

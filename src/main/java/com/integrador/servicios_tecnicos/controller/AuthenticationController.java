@@ -28,7 +28,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDTO> register(@RequestBody RegisterUserDTO registerUserDTO) throws MessagingException, SavedUserException {
+    public ResponseEntity<UserResponseDTO> register(@RequestBody RegisterUserDTO registerUserDTO) throws MessagingException, SavedUserException, ResourceNotFoundException {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(authenticationService.signUp(registerUserDTO));
     }
