@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,11 +51,11 @@ public class AuthenticationService {
         return modelMapper.map(userService.saveUser(user), UserResponseDTO.class);
     }
 
-    public LoginResponseDTO authenticate(LoginUserDTO login) throws AccountNotVerifiedException, ResourceNotFoundException {
+    public User authenticate(LoginUserDTO login) throws AccountNotVerifiedException, ResourceNotFoundException {
         User user = userService.getUserByEmail(login.getEmail());
         validateIfUserIsEnabled(user);
         authenticationManager.authenticate(createAuthenticationToken(login, user));
-        return modelMapper.map(user, LoginResponseDTO.class);
+        return user;
     }
 
     private List<GrantedAuthority> getAuthorities(User user) {
@@ -85,6 +86,7 @@ public class AuthenticationService {
                 .verificationCode(verificationService.generateVerificationCode())
                 .verificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15))
                 .enabled(true)
+                .roles(Collections.emptyList())
                 .build();
     }
 

@@ -1,6 +1,9 @@
 package com.integrador.servicios_tecnicos.models.dtos.user;
 
+import com.integrador.servicios_tecnicos.models.entity.Role;
 import lombok.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -10,8 +13,8 @@ import java.util.List;
 @Builder
 public class LoginResponseDTO {
     private String token;
-    private long expiresIn;
     private String username;
     private String email;
-    private List<String> roles;
+    private long expiresIn;
+    private List<Role> roles;
 }
