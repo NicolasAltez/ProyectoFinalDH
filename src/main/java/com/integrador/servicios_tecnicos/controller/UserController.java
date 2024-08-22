@@ -1,12 +1,11 @@
 package com.integrador.servicios_tecnicos.controller;
 
-import com.integrador.servicios_tecnicos.models.entity.User;
-import com.integrador.servicios_tecnicos.service.impl.UserService;
+import com.integrador.servicios_tecnicos.exceptions.ResourceNotFoundException;
+import com.integrador.servicios_tecnicos.models.dtos.user.UserResponseDTO;
+import com.integrador.servicios_tecnicos.service.user.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,14 +18,21 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<User> authenticatedUser(){
-        return ResponseEntity.ok((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    @GetMapping("/authenticated")
+    public ResponseEntity<UserResponseDTO> getAuthenticatedUser(){
+        return ResponseEntity.ok(userService.getAuthenticatedUser());
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> allUsers(){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserResponseDTO>> allUsers(){
         return ResponseEntity.ok(userService.allUsers());
+    }
+
+    @PutMapping("/update-roles")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserResponseDTO> updateUserRoles(@RequestParam Long userId, @RequestBody List<Long> roleIds) throws ResourceNotFoundException {
+        return ResponseEntity.ok(userService.updateUserRoles(userId, roleIds));
     }
 
 }

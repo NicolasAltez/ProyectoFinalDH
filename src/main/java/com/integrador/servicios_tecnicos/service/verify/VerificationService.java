@@ -4,7 +4,7 @@ import com.integrador.servicios_tecnicos.exceptions.*;
 import com.integrador.servicios_tecnicos.models.dtos.user.VerifyUserDTO;
 import com.integrador.servicios_tecnicos.models.entity.User;
 import com.integrador.servicios_tecnicos.service.email.EmailService;
-import com.integrador.servicios_tecnicos.service.impl.UserService;
+import com.integrador.servicios_tecnicos.service.user.UserService;
 import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Service;
 

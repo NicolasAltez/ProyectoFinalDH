@@ -2,14 +2,17 @@ package com.integrador.servicios_tecnicos.service.impl;
 
 import com.integrador.servicios_tecnicos.exceptions.ResourceNotFoundException;
 import com.integrador.servicios_tecnicos.exceptions.SavedUserException;
+import com.integrador.servicios_tecnicos.models.dtos.user.UserResponseDTO;
 import com.integrador.servicios_tecnicos.models.entity.User;
 import com.integrador.servicios_tecnicos.repository.UserRepository;
+import com.integrador.servicios_tecnicos.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +25,9 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     @InjectMocks
     private UserService userService;
@@ -47,7 +53,7 @@ class UserServiceTest {
         void testAllUsersWithResults() {
             when(userRepository.findAll()).thenReturn(List.of(user1, user2));
 
-            List<User> result = userService.allUsers();
+            List<UserResponseDTO> result = userService.allUsers();
 
             assertEquals(2, result.size());
             assertEquals("user1", result.get(0).getUsername());
@@ -60,7 +66,7 @@ class UserServiceTest {
         void testAllUsersEmpty() {
             when(userRepository.findAll()).thenReturn(Collections.emptyList());
 
-            List<User> result = userService.allUsers();
+            List<UserResponseDTO> result = userService.allUsers();
 
             assertEquals(0, result.size());
             verify(userRepository, times(1)).findAll();
@@ -127,9 +133,31 @@ class UserServiceTest {
                 userService.saveUser(user);
             });
 
-            assertEquals("Ocurrio un error al guardar el usuario", exception.getMessage());
+            assertEquals("Ocurrió un error al guardar el usuario", exception.getMessage());
 
             verify(userRepository, times(1)).save(user);
+        }
+    }
+
+    @Nested
+    class getUserById{
+        @Test
+        void testGetUserByIdUserFound() throws ResourceNotFoundException {
+            when(userRepository.findById(1L)).thenReturn(java.util.Optional.of(user1));
+            User result = userService.getUserById(1L);
+            assertNotNull(result);
+            assertEquals("user1", result.getUsername());
+            verify(userRepository, times(1)).findById(1L);
+        }
+
+        @Test
+        void testGetUserByEmailUserNotFound() {
+            when(userRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+            ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+                userService.getUserById(1L);
+            });
+            assertEquals("User not found", exception.getMessage());
+            verify(userRepository, times(1)).findById(1L);
         }
     }
 }

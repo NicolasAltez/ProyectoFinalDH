@@ -1,13 +1,13 @@
 package com.integrador.servicios_tecnicos.service.authtentication;
 
 import com.integrador.servicios_tecnicos.exceptions.*;
+import com.integrador.servicios_tecnicos.models.dtos.user.LoginResponseDTO;
 import com.integrador.servicios_tecnicos.models.dtos.user.LoginUserDTO;
 import com.integrador.servicios_tecnicos.models.dtos.user.RegisterUserDTO;
-import com.integrador.servicios_tecnicos.models.dtos.user.VerifyUserDTO;
+import com.integrador.servicios_tecnicos.models.dtos.user.UserResponseDTO;
 import com.integrador.servicios_tecnicos.models.entity.User;
-import com.integrador.servicios_tecnicos.repository.UserRepository;
 import com.integrador.servicios_tecnicos.service.email.EmailService;
-import com.integrador.servicios_tecnicos.service.impl.UserService;
+import com.integrador.servicios_tecnicos.service.user.UserService;
 import com.integrador.servicios_tecnicos.service.verify.VerificationService;
 import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,7 +86,7 @@ class AuthenticationServiceTest {
             when(verificationService.generateVerificationCode()).thenReturn("123456");
             doNothing().when(emailService).sendVerificationEmail(savedUser);
 
-            User result = authenticationService.signUp(registerUserDTO);
+            UserResponseDTO result = authenticationService.signUp(registerUserDTO);
 
             assertEquals(registerUserDTO.getUsername(), result.getUsername());
             assertEquals(registerUserDTO.getEmail(), result.getEmail());
@@ -110,7 +110,7 @@ class AuthenticationServiceTest {
             when(userService.getUserByEmail(anyString())).thenReturn(user);
 
 
-            User result = authenticationService.authenticate(loginUserDTO);
+            LoginResponseDTO result = authenticationService.authenticate(loginUserDTO);
 
 
             assertEquals(loginUserDTO.getEmail(), result.getEmail());

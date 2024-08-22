@@ -1,15 +1,16 @@
 package com.integrador.servicios_tecnicos.service.authtentication;
 
 import com.integrador.servicios_tecnicos.exceptions.*;
+import com.integrador.servicios_tecnicos.models.dtos.user.LoginResponseDTO;
 import com.integrador.servicios_tecnicos.models.dtos.user.LoginUserDTO;
 import com.integrador.servicios_tecnicos.models.dtos.user.RegisterUserDTO;
-import com.integrador.servicios_tecnicos.models.entity.Role;
+import com.integrador.servicios_tecnicos.models.dtos.user.UserResponseDTO;
 import com.integrador.servicios_tecnicos.models.entity.User;
-import com.integrador.servicios_tecnicos.repository.UserRepository;
 import com.integrador.servicios_tecnicos.service.email.EmailService;
-import com.integrador.servicios_tecnicos.service.impl.UserService;
+import com.integrador.servicios_tecnicos.service.user.UserService;
 import com.integrador.servicios_tecnicos.service.verify.VerificationService;
 import jakarta.mail.MessagingException;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,28 +31,30 @@ public class AuthenticationService {
     private final EmailService emailService;
     private final VerificationService verificationService;
     private final UserService userService;
+    private final ModelMapper modelMapper;
 
     private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
 
-    public AuthenticationService(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService, VerificationService verificationService,UserService userService) {
+    public AuthenticationService(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService, VerificationService verificationService,UserService userService,ModelMapper modelMapper) {
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.emailService = emailService;
         this.verificationService = verificationService;
         this.userService = userService;
+        this.modelMapper = modelMapper;
     }
 
-    public User signUp(RegisterUserDTO register) throws MessagingException, SavedUserException {
+    public UserResponseDTO signUp(RegisterUserDTO register) throws MessagingException, SavedUserException {
         User user = createUserToSignUp(register);
         emailService.sendVerificationEmail(user);
-        return userService.saveUser(user);
+        return modelMapper.map(userService.saveUser(user), UserResponseDTO.class);
     }
 
-    public User authenticate(LoginUserDTO login) throws AccountNotVerifiedException, ResourceNotFoundException {
+    public LoginResponseDTO authenticate(LoginUserDTO login) throws AccountNotVerifiedException, ResourceNotFoundException {
         User user = userService.getUserByEmail(login.getEmail());
         validateIfUserIsEnabled(user);
         authenticationManager.authenticate(createAuthenticationToken(login, user));
-        return user;
+        return modelMapper.map(user, LoginResponseDTO.class);
     }
 
     private List<GrantedAuthority> getAuthorities(User user) {
