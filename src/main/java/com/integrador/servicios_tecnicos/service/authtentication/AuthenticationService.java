@@ -5,8 +5,10 @@ import com.integrador.servicios_tecnicos.models.dtos.user.LoginResponseDTO;
 import com.integrador.servicios_tecnicos.models.dtos.user.LoginUserDTO;
 import com.integrador.servicios_tecnicos.models.dtos.user.RegisterUserDTO;
 import com.integrador.servicios_tecnicos.models.dtos.user.UserResponseDTO;
+import com.integrador.servicios_tecnicos.models.entity.Role;
 import com.integrador.servicios_tecnicos.models.entity.User;
 import com.integrador.servicios_tecnicos.service.email.EmailService;
+import com.integrador.servicios_tecnicos.service.role.RoleService;
 import com.integrador.servicios_tecnicos.service.user.UserService;
 import com.integrador.servicios_tecnicos.service.verify.VerificationService;
 import jakarta.mail.MessagingException;
@@ -33,19 +35,21 @@ public class AuthenticationService {
     private final VerificationService verificationService;
     private final UserService userService;
     private final ModelMapper modelMapper;
+    private final RoleService roleService;
 
     private final Logger LOGGER = LoggerFactory.getLogger(AuthenticationService.class);
 
-    public AuthenticationService(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService, VerificationService verificationService,UserService userService,ModelMapper modelMapper) {
+    public AuthenticationService(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService, VerificationService verificationService, UserService userService, ModelMapper modelMapper, RoleService roleService) {
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.emailService = emailService;
         this.verificationService = verificationService;
         this.userService = userService;
         this.modelMapper = modelMapper;
+        this.roleService = roleService;
     }
 
-    public UserResponseDTO signUp(RegisterUserDTO register) throws MessagingException, SavedUserException {
+    public UserResponseDTO signUp(RegisterUserDTO register) throws MessagingException, SavedUserException, ResourceNotFoundException {
         User user = createUserToSignUp(register);
         emailService.sendVerificationEmail(user);
         return modelMapper.map(userService.saveUser(user), UserResponseDTO.class);
@@ -78,7 +82,7 @@ public class AuthenticationService {
         }
     }
 
-    private User createUserToSignUp(RegisterUserDTO register){
+    private User createUserToSignUp(RegisterUserDTO register) throws ResourceNotFoundException {
         return User.builder()
                 .username(register.getUsername())
                 .email(register.getEmail())
@@ -86,8 +90,7 @@ public class AuthenticationService {
                 .verificationCode(verificationService.generateVerificationCode())
                 .verificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15))
                 .enabled(true)
-                .roles(Collections.emptyList())
+                .roles(Collections.singleton(roleService.getRoleByName("CLIENT")))
                 .build();
     }
-
 }
