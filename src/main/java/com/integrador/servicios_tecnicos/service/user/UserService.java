@@ -31,7 +31,6 @@ public class UserService {
         this.roleService = roleService;
         this.securityService = securityService;
         this.modelMapper = modelMapper;
-        configureMapping();
     }
 
     public List<UserResponseDTO> allUsers() {
@@ -62,7 +61,9 @@ public class UserService {
 
     @Transactional
     public UserResponseDTO updateUserRoles(Long userId, List<Long> roleIds) throws ResourceNotFoundException {
-        User user = getUserById(userId);
+        User user =  userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         List<Role> roles = roleService.getRolesByIds(roleIds);
 
         user.setRoles(roles);
@@ -71,16 +72,11 @@ public class UserService {
         return modelMapper.map(updatedUser, UserResponseDTO.class);
     }
 
-    public User getUserById(Long userId) throws ResourceNotFoundException {
-        return userRepository.findById(userId)
+    public UserResponseDTO getUserById(Long userId) throws ResourceNotFoundException {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        return modelMapper.map(user, UserResponseDTO.class);
     }
 
-    private void configureMapping(){
-        Converter<List<Role>, List<String>> rolesToNamesConverter = ctx ->
-                ctx.getSource().stream().map(Role::getName).collect(Collectors.toList());
-
-        modelMapper.typeMap(User.class, UserResponseDTO.class)
-                .addMappings(mapper -> mapper.using(rolesToNamesConverter).map(User::getRoles, UserResponseDTO::setRoles));
-    }
 }

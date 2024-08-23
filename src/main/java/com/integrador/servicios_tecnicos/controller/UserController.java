@@ -2,6 +2,7 @@ package com.integrador.servicios_tecnicos.controller;
 
 import com.integrador.servicios_tecnicos.exceptions.ResourceNotFoundException;
 import com.integrador.servicios_tecnicos.models.dtos.user.UserResponseDTO;
+import com.integrador.servicios_tecnicos.models.entity.User;
 import com.integrador.servicios_tecnicos.service.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,8 +32,15 @@ public class UserController {
 
     @PutMapping("/update-roles")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserResponseDTO> updateUserRoles(@RequestParam Long userId, @RequestBody List<Long> roleIds) throws ResourceNotFoundException {
+    public ResponseEntity<UserResponseDTO> updateUserRoles(@RequestParam Long userId, @RequestParam List<Long> roleIds) throws ResourceNotFoundException {
         return ResponseEntity.ok(userService.updateUserRoles(userId, roleIds));
     }
+
+    @GetMapping("details/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) throws ResourceNotFoundException {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+
 
 }

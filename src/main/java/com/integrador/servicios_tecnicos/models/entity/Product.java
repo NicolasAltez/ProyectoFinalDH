@@ -40,6 +40,7 @@ public class Product {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
     @Column(name = "url_image")
     private String urlImage;
 }

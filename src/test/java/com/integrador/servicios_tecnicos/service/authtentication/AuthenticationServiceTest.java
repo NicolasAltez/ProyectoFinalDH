@@ -1,9 +1,9 @@
 package com.integrador.servicios_tecnicos.service.authtentication;
 
 import com.integrador.servicios_tecnicos.exceptions.*;
-import com.integrador.servicios_tecnicos.models.dtos.user.LoginResponseDTO;
-import com.integrador.servicios_tecnicos.models.dtos.user.LoginUserDTO;
-import com.integrador.servicios_tecnicos.models.dtos.user.RegisterUserDTO;
+import com.integrador.servicios_tecnicos.models.dtos.user.login.LoginResponseDTO;
+import com.integrador.servicios_tecnicos.models.dtos.user.login.LoginUserDTO;
+import com.integrador.servicios_tecnicos.models.dtos.user.register.RegisterUserDTO;
 import com.integrador.servicios_tecnicos.models.dtos.user.UserResponseDTO;
 import com.integrador.servicios_tecnicos.models.entity.User;
 import com.integrador.servicios_tecnicos.service.email.EmailService;
@@ -69,7 +69,7 @@ class AuthenticationServiceTest {
     @Nested
     class signUp {
         @Test
-        void testSignUpSuccess() throws MessagingException, SavedUserException {
+        void testSignUpSuccess() throws MessagingException, SavedUserException, ResourceNotFoundException {
 
             User savedUser = User.builder()
                     .username(registerUserDTO.getUsername())
@@ -110,7 +110,7 @@ class AuthenticationServiceTest {
             when(userService.getUserByEmail(anyString())).thenReturn(user);
 
 
-            LoginResponseDTO result = authenticationService.authenticate(loginUserDTO);
+            User result = authenticationService.authenticate(loginUserDTO);
 
 
             assertEquals(loginUserDTO.getEmail(), result.getEmail());

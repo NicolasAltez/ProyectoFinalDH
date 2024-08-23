@@ -1,4 +1,4 @@
-package com.integrador.servicios_tecnicos.models.dtos.user;
+package com.integrador.servicios_tecnicos.models.dtos.user.register;
 
 import lombok.Getter;
 import lombok.Setter;

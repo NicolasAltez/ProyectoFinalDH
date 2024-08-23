@@ -4,7 +4,9 @@ import com.integrador.servicios_tecnicos.exceptions.AccountNotVerifiedException;
 import com.integrador.servicios_tecnicos.exceptions.ResourceNotFoundException;
 import com.integrador.servicios_tecnicos.exceptions.SavedUserException;
 import com.integrador.servicios_tecnicos.models.dtos.user.*;
-import com.integrador.servicios_tecnicos.models.entity.Role;
+import com.integrador.servicios_tecnicos.models.dtos.user.login.LoginResponseDTO;
+import com.integrador.servicios_tecnicos.models.dtos.user.login.LoginUserDTO;
+import com.integrador.servicios_tecnicos.models.dtos.user.register.RegisterUserDTO;
 import com.integrador.servicios_tecnicos.models.entity.User;
 import com.integrador.servicios_tecnicos.service.authtentication.AuthenticationService;
 import com.integrador.servicios_tecnicos.service.jwt.JwtService;
@@ -12,8 +14,6 @@ import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -36,12 +36,6 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> authenticate(@RequestBody LoginUserDTO loginUserDTO) throws AccountNotVerifiedException, ResourceNotFoundException {
         User authenticatedUser = authenticationService.authenticate(loginUserDTO);
-        return ResponseEntity.ok(LoginResponseDTO.builder()
-                        .token(jwtService.generateToken(authenticatedUser))
-                        .expiresIn(jwtService.getExpirationTime())
-                        .email(authenticatedUser.getEmail())
-                        .username(authenticatedUser.getUsername())
-                        .roles((List<Role>) authenticatedUser.getRoles())
-                .build());
+        return ResponseEntity.ok(LoginResponseDTO.fromEntity(authenticatedUser, jwtService.generateToken(authenticatedUser), jwtService.getExpirationTime()));
     }
 }
