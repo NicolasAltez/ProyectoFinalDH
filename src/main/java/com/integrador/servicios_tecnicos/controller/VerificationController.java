@@ -1,6 +1,6 @@
 package com.integrador.servicios_tecnicos.controller;
 
-import com.integrador.servicios_tecnicos.models.dtos.user.VerifyUserDTO;
+import com.integrador.servicios_tecnicos.models.dtos.user.verify.VerifyUserDTO;
 import com.integrador.servicios_tecnicos.service.verify.VerificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

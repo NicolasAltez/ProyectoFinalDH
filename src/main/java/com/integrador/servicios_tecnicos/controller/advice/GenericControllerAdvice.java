@@ -115,4 +115,19 @@ public class GenericControllerAdvice extends ResponseEntityExceptionHandler {
         LOGGER.error("verificationCodeExpiredException: {}", messageException);
         return new ResponseEntity<>(errorMessage, HttpStatus.GONE);
     }
+
+    @ExceptionHandler(SavedUserException.class)
+    public ResponseEntity<Object> savedUserException(SavedUserException savedUserException){
+        String messageException = savedUserException.getMessage();
+
+        ErrorMessageDTO errorMessage = ErrorMessageDTO.builder()
+                .message(messageException)
+                .timestamp(LocalDateTime.now())
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .description(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                .build();
+
+        LOGGER.error("savedUserException: {}", messageException);
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
 }

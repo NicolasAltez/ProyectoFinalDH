@@ -1,7 +1,6 @@
-package com.integrador.servicios_tecnicos.models.dtos.user;
+package com.integrador.servicios_tecnicos.models.dtos.user.verify;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter

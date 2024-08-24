@@ -1,18 +1,23 @@
 package com.integrador.servicios_tecnicos.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Collection;
+import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Builder
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(exclude = "users")
+@EqualsAndHashCode(exclude = "users")
 @Table(name = "roles")
 public class Role {
 
@@ -20,16 +25,10 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String name;
-    @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
 
-    @ManyToMany
-    @JoinTable(
-            name = "roles_privileges",
-            joinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "privilege_id", referencedColumnName = "id"))
-    private Collection<Privilege> privileges;
+    @ManyToMany(mappedBy = "roles")
+    @JsonIgnoreProperties({"roles", "handler", "hibernateLazyInitializer"})
+    private List<User> users;
 }
