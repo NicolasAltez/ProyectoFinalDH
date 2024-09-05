@@ -44,6 +44,9 @@ public class ProductController {
     }
 
     @GetMapping("/edit")
+    public ResponseEntity<Product> editProduct(@RequestBody ProductRequestDTO productRequestDTO, Long id) throws ResourceNotFoundException {
+        return new ResponseEntity<>(productService.editProduct(productRequestDTO, id), HttpStatus.OK);
+    }
 
 
 }

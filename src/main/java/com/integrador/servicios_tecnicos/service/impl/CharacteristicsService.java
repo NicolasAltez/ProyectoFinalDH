@@ -5,9 +5,10 @@ import com.integrador.servicios_tecnicos.repository.CharacteristicsRepository;
 import com.integrador.servicios_tecnicos.repository.ProductRepository;
 import com.integrador.servicios_tecnicos.service.ICharacteristicsService;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class CharacteristicsService implements ICharacteristicsService {
 
     private final CharacteristicsRepository characteristicsRepository;

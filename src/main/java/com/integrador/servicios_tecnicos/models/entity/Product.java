@@ -1,6 +1,5 @@
 package com.integrador.servicios_tecnicos.models.entity;
 
-
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
@@ -45,15 +44,9 @@ public class Product {
     @Column(name = "url_image")
     private String urlImage;
 
-    @ManyToOne
-    @JoinColumn(name = "characteristic_id", nullable = false)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Characteristic> characteristics;
 
-    @OneToMany(mappedBy = "characteristic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Product> productList;
-
     @Column(name = "reserved")
-    public boolean reserved;
+    private boolean reserved;
 }
-
-
