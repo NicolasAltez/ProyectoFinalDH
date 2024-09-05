@@ -32,5 +32,7 @@ public class Characteristic {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 }

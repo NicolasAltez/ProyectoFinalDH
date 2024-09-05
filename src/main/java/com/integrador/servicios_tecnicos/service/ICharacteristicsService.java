@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ICharacteristicsService {
 
-    List<Characteristic> getAllCharacteristics()
+    List<Characteristic> getAllCharacteristics();
 }
