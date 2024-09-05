@@ -3,13 +3,12 @@ package com.integrador.servicios_tecnicos.controller;
 import com.integrador.servicios_tecnicos.exceptions.ResourceNotFoundException;
 import com.integrador.servicios_tecnicos.models.dtos.products.ProductDetailsResponseDTO;
 import com.integrador.servicios_tecnicos.models.dtos.products.ProductNameDTO;
+import com.integrador.servicios_tecnicos.models.dtos.products.ProductRequestDTO;
+import com.integrador.servicios_tecnicos.models.entity.Product;
 import com.integrador.servicios_tecnicos.service.IProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,4 +31,19 @@ public class ProductController {
     public ResponseEntity<ProductDetailsResponseDTO> getProductDetailsById(@PathVariable Long id) throws ResourceNotFoundException {
         return new ResponseEntity<>(productService.getProductDetailsById(id), HttpStatus.OK);
     }
+
+    @PostMapping("/new")
+    public ResponseEntity<Product> createNewProduct(@RequestBody ProductRequestDTO productRequestDTO){
+        return new ResponseEntity<>(productService.createNewProduct(productRequestDTO), HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Product>> getAllProducts(){
+        return new ResponseEntity<>(productService.getAllProducts(),HttpStatus.OK);
+    }
+
+    @GetMapping("/edit")
+
+
 }

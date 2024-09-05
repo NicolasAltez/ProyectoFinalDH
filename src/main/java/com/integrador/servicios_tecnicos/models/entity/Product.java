@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -43,6 +44,16 @@ public class Product {
 
     @Column(name = "url_image")
     private String urlImage;
+
+    @ManyToOne
+    @JoinColumn(name = "characteristic_id", nullable = false)
+    private List<Characteristic> characteristics;
+
+    @OneToMany(mappedBy = "characteristic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Product> productList;
+
+    @Column(name = "reserved")
+    public boolean reserved;
 }
 
 
