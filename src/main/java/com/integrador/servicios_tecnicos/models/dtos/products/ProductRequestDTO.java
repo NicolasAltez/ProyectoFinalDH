@@ -2,6 +2,7 @@ package com.integrador.servicios_tecnicos.models.dtos.products;
 
 import com.integrador.servicios_tecnicos.models.entity.Category;
 import com.integrador.servicios_tecnicos.models.entity.Characteristic;
+import com.integrador.servicios_tecnicos.models.entity.Reservation;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,5 +36,6 @@ public class ProductRequestDTO {
 
     @NotEmpty(message = "characteristics are required")
     private List<Characteristic> characteristics;
+
 
 }

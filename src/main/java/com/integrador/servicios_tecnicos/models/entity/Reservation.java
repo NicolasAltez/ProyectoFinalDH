@@ -10,22 +10,19 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "characteristics")
+@Table(name = "reservations")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Characteristic {
+public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100, unique = true)
-    private String name;
-
-    @Column(nullable = false)
-    private String description;
+    @Column(name = "date", nullable = false)
+    private LocalDateTime date;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
