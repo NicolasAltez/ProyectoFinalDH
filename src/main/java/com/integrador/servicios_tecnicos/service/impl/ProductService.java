@@ -7,6 +7,7 @@ import com.integrador.servicios_tecnicos.models.dtos.products.ProductRequestDTO;
 import com.integrador.servicios_tecnicos.models.entity.Category;
 import com.integrador.servicios_tecnicos.models.entity.Characteristic;
 import com.integrador.servicios_tecnicos.models.entity.Product;
+import com.integrador.servicios_tecnicos.repository.CharacteristicsRepository;
 import com.integrador.servicios_tecnicos.repository.ProductRepository;
 import com.integrador.servicios_tecnicos.service.ICategoryService;
 import com.integrador.servicios_tecnicos.service.IProductService;
@@ -20,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements IProductService {
@@ -30,12 +32,15 @@ public class ProductService implements IProductService {
 
     private final ICategoryService categoryService;
 
+    private  final CharacteristicsRepository characteristicsRepository;
+
     private final ModelMapper modelMapper;
 
-    public ProductService(ProductRepository productRepository, ModelMapper modelMapper, ICategoryService categoryService) {
+    public ProductService(ProductRepository productRepository, ModelMapper modelMapper, ICategoryService categoryService, CharacteristicsRepository characteristicsRepository) {
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
         this.categoryService = categoryService;
+        this.characteristicsRepository = characteristicsRepository;
     }
 
     @Override
@@ -59,13 +64,23 @@ public class ProductService implements IProductService {
     @Override
     public Product createNewProduct(ProductRequestDTO productRequestDTO) {
         Category category = findCategoryById(productRequestDTO);
+
+
+        // Cargar las características existentes desde la base de datos
+        List<Characteristic> managedCharacteristics = productRequestDTO.getCharacteristics().stream()
+                .map(characteristic -> characteristicsRepository.findById(characteristic.getId())
+                        .orElseThrow(() -> new RuntimeException("Characteristic not found: " + characteristic.getId())))
+                .toList();
+
         return productRepository.save(
                 Product.builder()
                         .price(productRequestDTO.getPrice())
-                        .characteristics(productRequestDTO.getCharacteristics())
+                        .characteristics(managedCharacteristics)
                         .name(productRequestDTO.getName())
                         .description(productRequestDTO.getDescription())
+                        .urlImage(productRequestDTO.getUrlImage())
                         .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
                         .category(category)
                         .build()
         );
@@ -80,7 +95,33 @@ public class ProductService implements IProductService {
     public Product editProduct(ProductRequestDTO productRequestDTO, Long id) throws ResourceNotFoundException {
         Optional<Product> productToModified = productRepository.findById(id);
         if (productToModified.isPresent()) {
-            return productRepository.save(createProductToModified(productToModified.get(), productRequestDTO));
+
+            Category category = findCategoryById(productRequestDTO);
+
+
+            // Cargar las características existentes desde la base de datos
+            List<Characteristic> managedCharacteristics = productRequestDTO.getCharacteristics().stream()
+                    .map(characteristic -> characteristicsRepository.findById(characteristic.getId())
+                            .orElseThrow(() -> new RuntimeException("Characteristic not found: " + characteristic.getId())))
+                    .toList();
+
+            return productRepository.save(
+                    Product.builder()
+                            .id(id)
+                            .price(productRequestDTO.getPrice())
+                            .characteristics(managedCharacteristics)
+                            .name(productRequestDTO.getName())
+                            .description(productRequestDTO.getDescription())
+                            .urlImage(productRequestDTO.getUrlImage())
+                            .createdAt(LocalDateTime.now())
+                            .updatedAt(LocalDateTime.now())
+                            .category(category)
+                            .build()
+            );
+
+
+
+           // return productRepository.save(createProductToModified(productToModified.get(), productRequestDTO));
         } else {
             throw new ResourceNotFoundException("No se encontró el producto a actualizar con id: " + id);
         }

@@ -1,6 +1,7 @@
 package com.integrador.servicios_tecnicos.models.dtos.products;
 
 
+import com.integrador.servicios_tecnicos.models.entity.Category;
 import com.integrador.servicios_tecnicos.models.entity.Characteristic;
 import com.integrador.servicios_tecnicos.models.entity.Reservation;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 @Builder
 public class ProductDetailsResponseDTO {
     private Long id;
+    private Long categoryId;
     private String categoryName;
     private String name;
     private String description;
