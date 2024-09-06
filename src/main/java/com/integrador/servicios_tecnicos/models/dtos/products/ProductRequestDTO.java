@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 public class ProductRequestDTO {
     @NotNull(message = "Category ID is required")
-    private Category category;
+    private Long categoryId;
 
     @NotNull(message = "Product type is required")
     @Size(max = 100, message = "Product name must be less than 100 characters")

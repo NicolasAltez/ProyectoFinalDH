@@ -48,5 +48,4 @@ public class ProductController {
         return new ResponseEntity<>(productService.editProduct(productRequestDTO, id), HttpStatus.OK);
     }
 
-
 }

@@ -8,6 +8,7 @@ import com.integrador.servicios_tecnicos.models.entity.Category;
 import com.integrador.servicios_tecnicos.models.entity.Characteristic;
 import com.integrador.servicios_tecnicos.models.entity.Product;
 import com.integrador.servicios_tecnicos.repository.ProductRepository;
+import com.integrador.servicios_tecnicos.service.ICategoryService;
 import com.integrador.servicios_tecnicos.service.IProductService;
 import jakarta.validation.constraints.*;
 import org.modelmapper.ModelMapper;
@@ -27,11 +28,14 @@ public class ProductService implements IProductService {
 
     private final ProductRepository productRepository;
 
+    private final ICategoryService categoryService;
+
     private final ModelMapper modelMapper;
 
-    public ProductService(ProductRepository productRepository, ModelMapper modelMapper) {
+    public ProductService(ProductRepository productRepository, ModelMapper modelMapper, ICategoryService categoryService) {
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -54,6 +58,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product createNewProduct(ProductRequestDTO productRequestDTO) {
+        Category category = findCategoryById(productRequestDTO);
         return productRepository.save(
                 Product.builder()
                         .price(productRequestDTO.getPrice())
@@ -61,7 +66,7 @@ public class ProductService implements IProductService {
                         .name(productRequestDTO.getName())
                         .description(productRequestDTO.getDescription())
                         .createdAt(LocalDateTime.now())
-                        .category(productRequestDTO.getCategory())
+                        .category(category)
                         .build()
         );
     }
@@ -82,12 +87,17 @@ public class ProductService implements IProductService {
     }
 
     private Product createProductToModified(Product productToModified, ProductRequestDTO productRequestDTO) {
+        Category category = findCategoryById(productRequestDTO);
         return Product.builder()
                 .id(productToModified.getId())
                 .price(productRequestDTO.getPrice())
-                .category(productRequestDTO.getCategory())
+                .category(category)
                 .name(productRequestDTO.getName())
                 .description(productRequestDTO.getDescription())
                 .build();
+    }
+
+    private Category findCategoryById(ProductRequestDTO productRequestDTO){
+        return categoryService.findCategoryById(productRequestDTO.getCategoryId());
     }
 }

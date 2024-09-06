@@ -1,6 +1,7 @@
 package com.integrador.servicios_tecnicos.service.impl;
 
 import com.integrador.servicios_tecnicos.models.dtos.category.CategoryWithName;
+import com.integrador.servicios_tecnicos.models.entity.Category;
 import com.integrador.servicios_tecnicos.service.ICategoryService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -29,6 +30,11 @@ public class CategoryService implements ICategoryService {
         return categoryRepository.findAll()
                 .stream()
                 .map(category -> modelMapper.map(category, CategoryWithName.class)).toList();
+    }
+
+    @Override
+    public Category findCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId).orElse(null);
     }
 
 }
