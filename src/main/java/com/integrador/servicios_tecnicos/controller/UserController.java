@@ -25,19 +25,16 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponseDTO>> allUsers(){
         return ResponseEntity.ok(userService.allUsers());
     }
 
     @PutMapping("/update-roles")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponseDTO> updateUserRoles(@RequestParam Long userId, @RequestParam List<Long> roleIds) throws ResourceNotFoundException {
         return ResponseEntity.ok(userService.updateUserRoles(userId, roleIds));
     }
 
     @GetMapping("details/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) throws ResourceNotFoundException {
         return ResponseEntity.ok(userService.getUserById(id));
     }

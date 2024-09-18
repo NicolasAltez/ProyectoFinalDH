@@ -94,7 +94,7 @@ public class AuthenticationService {
                 .verificationCode(verificationService.generateVerificationCode())
                 .verificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15))
                 .enabled(true)
-                .roles(List.of(roleService.getRoleByName("ADMIN")))
+                .roles(List.of(roleService.getRoleByName("CLIENT")))
                 .build();
     }
 }
