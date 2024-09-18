@@ -26,8 +26,8 @@ public class ReservationController {
         return new ResponseEntity<>(reservationService.saveReservation(requestDTO), HttpStatus.CREATED);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Reservation>> getAllReservations(@PathVariable String email){
+    @GetMapping("/all/{email}")
+    public ResponseEntity<List<Reservation>> getAllReservations(@PathVariable String email) throws ResourceNotFoundException {
         return new ResponseEntity<>(reservationService.getAllReservations(email), HttpStatus.OK);
     }
  }

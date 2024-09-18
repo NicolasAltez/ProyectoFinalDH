@@ -43,8 +43,9 @@ public class ReservationService {
         );
     }
 
-    public List<Reservation> getAllReservations(String email) {
-        return reservationRepository.findAllByEmail(email);
+    public List<Reservation> getAllReservations(String email) throws ResourceNotFoundException {
+        User user = userService.getUserByEmail(email);
+        return reservationRepository.findAllByUser(user);
     }
 
 
