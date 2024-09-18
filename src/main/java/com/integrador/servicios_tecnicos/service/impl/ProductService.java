@@ -141,4 +141,9 @@ public class ProductService implements IProductService {
     private Category findCategoryById(ProductRequestDTO productRequestDTO){
         return categoryService.findCategoryById(productRequestDTO.getCategoryId());
     }
+
+    public Product getProductById(Long id) throws ResourceNotFoundException {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    }
 }
