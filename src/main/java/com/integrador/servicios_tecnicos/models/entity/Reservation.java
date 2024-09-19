@@ -33,7 +33,6 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    @JsonIgnore
     private Product product;
 
     @ManyToOne

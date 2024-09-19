@@ -25,7 +25,6 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    @JsonIgnore
     private Category category;
 
     @Column(nullable = false, length = 100, unique = true)
@@ -50,5 +49,6 @@ public class Product {
     private List<Characteristic> characteristics;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Reservation> reservations;
 }
