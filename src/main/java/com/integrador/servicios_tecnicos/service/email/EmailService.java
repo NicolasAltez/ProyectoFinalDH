@@ -56,4 +56,29 @@ public class EmailService {
                 + "</html>",true);
         emailSender.send(message);
     }
+
+    public void sendReservationConfirmationEmail(String to, String reservationDetails) throws MessagingException {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setTo(to);
+        helper.setSubject("Reservation Confirmed");
+        helper.setText("<html>"
+                + "<body style=\"font-family: Arial, sans-serif;\">"
+                + "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
+                + "<h2 style=\"color: #333;\">Reservation Confirmation</h2>"
+                + "<p style=\"font-size: 16px;\">We are pleased to inform you that your reservation has been successfully confirmed!</p>"
+                + "<p style=\"font-size: 16px;\">Here are the details of your reservation:</p>"
+                + "<div style=\"background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);\">"
+                + "<h3 style=\"color: #333;\">Reservation Details:</h3>"
+                + "<p style=\"font-size: 18px; font-weight: bold; color: #007bff;\">" + reservationDetails + "</p>"
+                + "</div>"
+                + "<p style=\"font-size: 16px;\">Thank you for choosing us, and we look forward to serving you!</p>"
+                + "</div>"
+                + "</body>"
+                + "</html>", true);
+
+        emailSender.send(message);
+    }
+
 }
